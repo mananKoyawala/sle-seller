@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sle_seller/Package/PackageConstants.dart';
 
 class SharedPreference {
   bool isLoggedIn = false;
@@ -29,8 +30,19 @@ class SharedPreference {
   }
 
   // save seller details after login or singup
-  Future<void> setSellerData(String id, first_name, last_name, email, phone,
-      imageUrl, pan_card, dob, companyName, description, gstNumber) async {
+  Future<void> setSellerData(
+      String id,
+      first_name,
+      last_name,
+      email,
+      phone,
+      imageUrl,
+      pan_card,
+      dob,
+      companyName,
+      companyAddress,
+      description,
+      gstNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('id', id);
     await prefs.setString('first_name', first_name);
@@ -40,7 +52,8 @@ class SharedPreference {
     await prefs.setString('image_url', imageUrl);
     await prefs.setString('pan_card', pan_card);
     await prefs.setString('dob', dob);
-    await prefs.setString('company_name', companyName);
+    await prefs.setString('companyName', companyName);
+    await prefs.setString('address', companyAddress);
     await prefs.setString('description', description);
     await prefs.setString('gst_number', gstNumber);
   }
@@ -58,7 +71,7 @@ class SharedPreference {
     address = prefs.getString('address') ?? '';
     pan_card = prefs.getString('pan_card') ?? '';
     dob = prefs.getString('dob') ?? '';
-    company_name = prefs.getString('company_name') ?? '';
+    company_name = prefs.getString('companyName') ?? '';
     description = prefs.getString('description') ?? '';
     gst_number = prefs.getString('gst_number') ?? '';
   }

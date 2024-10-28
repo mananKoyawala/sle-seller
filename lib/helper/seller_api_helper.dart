@@ -32,6 +32,7 @@ class SellerApiHelper {
           seller.pan_card,
           seller.dob,
           seller.company_name,
+          seller.address,
           seller.description,
           seller.gst_number);
       await pref.getUserData();
@@ -89,6 +90,7 @@ class SellerApiHelper {
           seller.pan_card,
           seller.dob,
           seller.company_name,
+          seller.address,
           seller.description,
           seller.gst_number);
       await pref.getUserData();
