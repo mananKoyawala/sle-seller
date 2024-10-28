@@ -3,7 +3,8 @@ import 'package:sle_seller/Package/PackageConstants.dart';
 
 class EditProfileController {
   final formKey = GlobalKey<FormState>();
-  final nameCtr = TextEditingController();
+  final firstNameCtr = TextEditingController();
+  final lastNameCtr = TextEditingController();
   final companyAddCtr = TextEditingController();
   final companyDescriptionCtr = TextEditingController();
   final phoneNumberCtr = TextEditingController();
@@ -15,7 +16,8 @@ class EditProfileController {
   }
 
   void onDispose() {
-    nameCtr.dispose();
+    firstNameCtr.dispose();
+    lastNameCtr.dispose();
     companyAddCtr.dispose();
     companyDescriptionCtr.dispose();
     phoneNumberCtr.dispose();

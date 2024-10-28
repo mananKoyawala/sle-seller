@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sle_seller/Screen/Auth/auth_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sle_seller/Screen/splash_screen.dart';
 import 'package:sle_seller/Service/NavigatorKey.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Load environment variables
+  await dotenv.load(fileName: "lib/.env");
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch().copyWith(primary: Colors.green),
           fontFamily: "popins"),
       debugShowCheckedModeBanner: false,
-      home: AuthScreen(),
+      home: SplashScreen(),
     );
   }
 }

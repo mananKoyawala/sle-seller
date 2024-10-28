@@ -4,14 +4,23 @@ import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/Package/RippleEffect/RippleEffectContainer.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
+import 'package:sle_seller/Screen/Auth/auth_screen.dart';
 import 'package:sle_seller/Screen/edit_profile_screen.dart';
 import 'package:sle_seller/Screen/update_password_screen.dart';
+import 'package:sle_seller/helper/seller_api_helper.dart';
+import 'package:sle_seller/provider/Auth/login_provider.dart';
+import 'package:sle_seller/provider/dashboard_provider.dart';
+import 'package:sle_seller/provider/shared_preference.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileScreen extends StatelessWidget with text_with_button, utils {
-  const ProfileScreen({super.key});
+import '../provider/Auth/auth_provider.dart';
 
+class ProfileScreen extends ConsumerWidget with text_with_button, utils {
+  ProfileScreen({super.key});
+  SharedPreference pref = SharedPreference();
+  SellerApiHelper helper = SellerApiHelper();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -32,7 +41,7 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       text(
-                        text: "VNS International Private Limited",
+                        text: pref.company_name,
                         fontSize: 24,
                         textAlign: TextAlign.center,
                         fontWeight: 5,
@@ -40,9 +49,26 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
                       sizeH25(),
                       Row(
                         children: [
-                          const CircleAvatar(
-                            radius: 45,
-                            backgroundColor: Colors.green,
+                          SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: ClipRRect(
+                              borderRadius: radius(80),
+                              child: Image.network(
+                                  pref.image_url == ""
+                                      ? "Loading..."
+                                      : pref.image_url,
+                                  height: 80,
+                                  errorBuilder: (context, error, stackTrace) {
+                                return SizedBox(
+                                  height: 80,
+                                  width: 80,
+                                  child: Center(
+                                      child:
+                                          text(text: "No Image", fontSize: 14)),
+                                );
+                              }),
+                            ),
                           ),
                           sizeW(15),
                           Column(
@@ -50,14 +76,14 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               text(
-                                text: "Dhaval Ghandhi",
+                                text: "${pref.first_name} ${pref.last_name}",
                                 fontSize: 18,
                                 fontWeight: 5,
                               ),
                               overFlowText(
                                   h: 20,
                                   w: getScreenWidth(context) * .5,
-                                  text: "dhavalgsjdkjdkhandhi@gmail.com",
+                                  text: pref.email,
                                   fontSize: 14,
                                   fontWeight: 5,
                                   overflow: TextOverflow.ellipsis),
@@ -77,7 +103,13 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
                 sizeH(30),
                 AccounttList(
                     onTap: () {
-                      Navigation.pushMaterial(EditProfile());
+                      Navigation.pushMaterial(EditProfile(
+                        first_name: pref.first_name,
+                        last_name: pref.last_name,
+                        company_address: pref.address,
+                        company_description: pref.description,
+                        phone: pref.phone,
+                      ));
                     },
                     icon: Icons.person,
                     title: "My Profile",
@@ -115,7 +147,17 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
                     title: "About us",
                     subtitle: "Get information about us & SLE"),
                 AccounttList(
-                    onTap: () {},
+                    onTap: () {
+                      decisionDialog("Logout",
+                          "Are you sure, You want to logout?", "No", "Yes", () {
+                        Navigation.pop();
+                      }, () {
+                        _logoutDetails();
+                        onChangeDashboardProvider(ref, true);
+                        changeIsLoginOpen(ref, true);
+                        Navigation.pushMaterialAndRemoveUntil(AuthScreen());
+                      });
+                    },
                     icon: Icons.logout,
                     title: "Logout",
                     subtitle: "Sign out of your accountt"),
@@ -126,6 +168,13 @@ class ProfileScreen extends StatelessWidget with text_with_button, utils {
         ),
       ),
     );
+  }
+
+  deleteAccount() async {}
+
+  _logoutDetails() async {
+    await pref.setIsLoggedIn(false);
+    await pref.setSellerData("", "", "", "", "", "", "", "", "", "", "");
   }
 }
 

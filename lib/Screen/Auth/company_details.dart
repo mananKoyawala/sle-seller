@@ -3,15 +3,17 @@ import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
 import 'package:sle_seller/provider/Auth/signup_provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Package/PackageConstants.dart';
 
-class CompanyDetails extends StatelessWidget
+class CompanyDetails extends ConsumerWidget
     with text_with_button, formField, utils {
   CompanyDetails({super.key});
   SignupController ctr = SignupController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var isLoading = ref.watch(isLoadingSignupProvider);
+
     return Scaffold(
       body: CP(
         h: 16,
@@ -118,10 +120,10 @@ class CompanyDetails extends StatelessWidget
                 visible: visibility(),
                 child: simpleButton(
                     onTap: () {
-                      ctr.onSubmit2();
+                      ctr.onSubmit2(ref);
                     },
                     title: text(
-                      text: "NEXT",
+                      text: isLoading ? "Processing..." : "SING UP",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,

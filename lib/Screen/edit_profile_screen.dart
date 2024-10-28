@@ -8,10 +8,26 @@ import '../../Package/PackageConstants.dart';
 
 class EditProfile extends StatelessWidget
     with text_with_button, formField, utils {
-  EditProfile({super.key});
+  EditProfile(
+      {super.key,
+      required this.first_name,
+      required this.last_name,
+      required this.company_address,
+      required this.company_description,
+      required this.phone});
   EditProfileController ctr = EditProfileController();
+  final String first_name,
+      last_name,
+      company_address,
+      company_description,
+      phone;
   @override
   Widget build(BuildContext context) {
+    ctr.firstNameCtr.text = first_name;
+    ctr.lastNameCtr.text = last_name;
+    ctr.companyAddCtr.text = company_address;
+    ctr.companyDescriptionCtr.text = company_description;
+    ctr.phoneNumberCtr.text = phone;
     return Scaffold(
       body: CP(
         h: 16,
@@ -36,9 +52,21 @@ class EditProfile extends StatelessWidget
                       textFormField(
                         context: context,
                         funValidate: (val) => Validator.fieldRequired(val),
-                        controller: ctr.nameCtr,
+                        controller: ctr.firstNameCtr,
                         isborder: false,
-                        hintText: "Full name",
+                        hintText: "First name",
+                        maxLength: 20,
+                        textInputType: TextInputType.text,
+                        fieldColor: Colors.green,
+                        onClickColor: Colors.green,
+                      ),
+                      sizeH25(),
+                      textFormField(
+                        context: context,
+                        funValidate: (val) => Validator.fieldRequired(val),
+                        controller: ctr.lastNameCtr,
+                        isborder: false,
+                        hintText: "Last name",
                         maxLength: 20,
                         textInputType: TextInputType.text,
                         fieldColor: Colors.green,
@@ -76,6 +104,7 @@ class EditProfile extends StatelessWidget
                         controller: ctr.phoneNumberCtr,
                         isborder: false,
                         hintText: "Phone number",
+                        labelText: "Phone number",
                         textInputType: TextInputType.number,
                         textInputAction: TextInputAction.done,
                         maxLength: 10,

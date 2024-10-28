@@ -50,9 +50,33 @@ class Validator {
   static String? validatePassword(String? val) {
     if (val == null || val.isEmpty) {
       return 'Password is required';
-    } else if (val.length < 6) {
-      return 'Password must be at least 6 characters long';
     }
+    // Check if length is between 6 and 10 characters
+    if (val.length < 6 || val.length > 10) {
+      return 'Password must be 6 to 10 characters long';
+    }
+
+    // Check for at least one uppercase letter
+    if (!RegExp(r'^(?=.*[A-Z])').hasMatch(val)) {
+      return 'Required at least one uppercase letter';
+    }
+
+    // Check for at least one lowercase letter
+    if (!RegExp(r'^(?=.*[a-z])').hasMatch(val)) {
+      return 'Required at least one lowercase letter';
+    }
+
+    // Check for at least one number
+    if (!RegExp(r'^(?=.*\d)').hasMatch(val)) {
+      return 'Required at least one number';
+    }
+
+    // Check for at least one special character (@, %, *, ^)
+    if (!RegExp(r'^(?=.*[@%*^])').hasMatch(val)) {
+      return 'Required one special character (@, %, *, ^)';
+    }
+
+    // If all conditions are met, return null (indicating the password is valid)
     return null;
   }
 
@@ -210,6 +234,13 @@ class Navigation {
   static pushMaterialReplacement(Widget widget) {
     return Navigator.pushReplacement(
         navigatorContext, MaterialPageRoute(builder: (_) => widget));
+  }
+
+  static pushMaterialAndRemoveUntil(Widget widget) {
+    return Navigator.pushAndRemoveUntil(
+        navigatorContext,
+        MaterialPageRoute(builder: (_) => widget),
+        (Route<dynamic> route) => false);
   }
 
   static visibility(BuildContext context) {

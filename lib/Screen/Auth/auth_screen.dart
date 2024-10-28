@@ -8,6 +8,7 @@ import 'package:sle_seller/Screen/Auth/login.dart';
 import 'package:sle_seller/Screen/Auth/signup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sle_seller/provider/Auth/auth_provider.dart';
+import 'package:sle_seller/provider/Auth/signup_provider.dart';
 
 class AuthScreen extends ConsumerWidget
     with text_with_button, formField, utils {
@@ -15,6 +16,9 @@ class AuthScreen extends ConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // clean stuff
+    SignupController controller = SignupController();
+    controller.resetAll();
     // provider helps in navigate between login and signup
     var isLoginOpen = ref.watch(isLoginOpenProvider);
 
@@ -39,7 +43,7 @@ class AuthScreen extends ConsumerWidget
                 children: [
                   ClickEffect(
                     onTap: () {
-                      changeIsLoginOpen(ref);
+                      changeIsLoginOpen(ref, true);
                     },
                     borderRadius: radius(10),
                     child: CP(
@@ -55,7 +59,7 @@ class AuthScreen extends ConsumerWidget
                   ),
                   ClickEffect(
                     onTap: () {
-                      changeIsLoginOpen(ref);
+                      changeIsLoginOpen(ref, false);
                     },
                     borderRadius: radius(10),
                     child: CP(

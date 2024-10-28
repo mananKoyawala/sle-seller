@@ -3,6 +3,7 @@ import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sle_seller/provider/Auth/login_provider.dart';
 import 'package:sle_seller/provider/update_password_provider.dart';
 import '../../Package/PackageConstants.dart';
 
@@ -13,6 +14,7 @@ class UpdatePasswordScreen extends ConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isObsecure = ref.watch(editPasswordObseureTextProvider);
+    var isLoading = ref.watch(isLoadingProvider);
     return Scaffold(
       body: CP(
         h: 16,
@@ -85,10 +87,10 @@ class UpdatePasswordScreen extends ConsumerWidget
                 visible: visibility(),
                 child: simpleButton(
                     onTap: () {
-                      ctr.onSubmit();
+                      ctr.onSubmit(ref);
                     },
                     title: text(
-                      text: "Update",
+                      text: isLoading ? "Processing..." : "Update",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,

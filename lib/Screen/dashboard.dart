@@ -6,12 +6,19 @@ import 'package:sle_seller/Screen/add_products_screen.dart';
 import 'package:sle_seller/Screen/home_screen.dart';
 import 'package:sle_seller/Screen/profile_screen.dart';
 import 'package:sle_seller/provider/dashboard_provider.dart';
+import 'package:sle_seller/provider/shared_preference.dart';
 
 class Dashboard extends ConsumerWidget {
   const Dashboard({super.key});
 
+  _getSharedPreference() async {
+    SharedPreference pref = SharedPreference();
+    await pref.getUserData();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _getSharedPreference();
     var isHomePage = ref.watch(dashboardProvider);
     return Scaffold(
       // floating action button

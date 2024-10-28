@@ -8,10 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Login extends ConsumerWidget with text_with_button, formField, utils {
   Login({super.key});
-  LoginController ctr = LoginController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ctr = ref.read(loginControllerProvider);
     var isObsecure = ref.watch(obsecureTextProvider);
+    var isLoading = ref.watch(isLoadingProvider);
     return Column(
       children: [
         Form(
@@ -60,11 +62,11 @@ class Login extends ConsumerWidget with text_with_button, formField, utils {
         ),
         sizeH(60),
         simpleButton(
-            onTap: () {
-              ctr.onSubmit();
+            onTap: () async {
+              ctr.onSubmit(ref);
             },
             title: text(
-              text: "LOGIN",
+              text: isLoading ? "Processing..." : "LOGIN",
               fontSize: 18,
               fontWeight: 5,
               textColor: Colors.white,
