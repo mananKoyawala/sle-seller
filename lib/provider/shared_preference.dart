@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sle_seller/Package/PackageConstants.dart';
 
 class SharedPreference {
   bool isLoggedIn = false;
@@ -92,6 +91,22 @@ class SharedPreference {
   Future<bool> getIsLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('isLoggedIn') ?? false;
+  }
+
+  void resetAll() {
+    id = "";
+    first_name = "";
+    last_name = "";
+    email = "";
+    password = "";
+    phone = "";
+    image_url = "";
+    address = "";
+    pan_card = "";
+    dob = "";
+    company_name = "";
+    description = "";
+    gst_number = "";
   }
 
   // after update the seller data

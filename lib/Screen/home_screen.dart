@@ -9,68 +9,83 @@ class HomeScreen extends StatelessWidget with text_with_button, utils {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: CP(
-          h: 16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              sizeH(50),
-              text(text: "Your Products", fontSize: 22, fontWeight: 5),
-              sizeH25(),
-              Container(
-                height: 170,
-                width: getScreenWidth(context),
-                decoration: BoxDecoration(
-                    color: Colors.green[100], borderRadius: radius(20)),
-                child: Row(
+    return SafeArea(
+      child: Scaffold(
+        body: CP(
+            h: 16,
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: getScreenWidth(context) * .35,
-                      margin: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: radius(20)),
-                    ),
-                    sizeW10(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        sizeH10(),
-                        text(text: "web cam", fontSize: 18, fontWeight: 5),
-                        sizeH(5),
-                        overFlowText(
-                            h: 20,
-                            w: getScreenWidth(context) / 2,
-                            maxLines: 1,
-                            text: "logti desijddjdjgo isdj oidjojif",
-                            fontSize: 16,
-                            overflow: TextOverflow.ellipsis),
-                        sizeH(10),
-                        text(
-                            text: "999₹ / Piece",
-                            fontSize: 16,
-                            textColor: Colors.green),
-                        sizeH(10),
-                        simpleButton(
-                            height: 45,
-                            width: 65,
-                            onTap: () {
-                              Navigation.pushMaterial(EditProductScreen());
-                            },
-                            title: text(
-                                text: "Edit",
-                                fontSize: 16,
-                                textColor: Colors.white))
-                      ],
-                    )
+                    sizeH(50),
+                    text(text: "Your Products", fontSize: 22, fontWeight: 5),
+                    sizeH25(),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 10,
+                        itemBuilder: (context, index) {
+                          return ProductContainer();
+                        }),
+                    sizeH(40),
                   ],
                 ),
-              )
-            ],
+              ],
+            )),
+      ),
+    );
+  }
+}
+
+class ProductContainer extends StatelessWidget with text_with_button, utils {
+  const ProductContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      height: 170,
+      width: getScreenWidth(context),
+      decoration:
+          BoxDecoration(color: Colors.green[100], borderRadius: radius(20)),
+      child: Row(
+        children: [
+          Container(
+            width: getScreenWidth(context) * .35,
+            margin: const EdgeInsets.all(5),
+            decoration:
+                BoxDecoration(color: Colors.white, borderRadius: radius(20)),
           ),
-        ),
+          sizeW10(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              sizeH10(),
+              text(text: "web cam", fontSize: 18, fontWeight: 5),
+              sizeH(5),
+              overFlowText(
+                  h: 20,
+                  w: getScreenWidth(context) / 2,
+                  maxLines: 1,
+                  text: "logti desijddjdjgo isdj oidjojif",
+                  fontSize: 16,
+                  overflow: TextOverflow.ellipsis),
+              sizeH(10),
+              text(text: "999₹ / Piece", fontSize: 16, textColor: Colors.green),
+              sizeH(10),
+              simpleButton(
+                  height: 45,
+                  width: 65,
+                  onTap: () {
+                    Navigation.pushMaterial(EditProductScreen());
+                  },
+                  title:
+                      text(text: "Edit", fontSize: 16, textColor: Colors.white))
+            ],
+          )
+        ],
       ),
     );
   }

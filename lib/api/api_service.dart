@@ -70,4 +70,53 @@ class ApiService {
       Uri.parse('$baseURL/sellers/$id'),
     );
   }
+
+  Future<http.Response> addProduct(String name, category, brand, description,
+      image, seller_id, int quantity, price) async {
+    return await http.post(Uri.parse('$baseURL/products'),
+        body: jsonEncode({
+          'p_name': name,
+          'p_category': category,
+          'p_brand': brand,
+          'p_description': description,
+          'p_image': image,
+          'p_price': price,
+          'p_quantity': quantity,
+          's_id': seller_id,
+        }),
+        headers: {"Content-Type": "application/json"});
+  }
+
+  Future<http.Response> getProductByID(String product_id) async {
+    return await http.get(Uri.parse('$baseURL/products/$product_id'));
+  }
+
+  Future<http.Response> deleteProduct(String product_id) async {
+    return await http.delete(Uri.parse('$baseURL/products/$product_id'));
+  }
+
+  Future<http.Response> getAllProductsBySeller(String seller_id) async {
+    return await http
+        .get(Uri.parse('$baseURL/products/category?s_id=$seller_id'));
+  }
+
+  Future<http.Response> updateProductDetails(String product_id, name, category,
+      brand, description, image, seller_id, int quantity, price) async {
+    return await http.put(Uri.parse('$baseURL/products/$product_id'),
+        body: jsonEncode({
+          'p_name': name,
+          'p_category': category,
+          'p_brand': brand,
+          'p_description': description,
+          'p_image': image,
+          'p_price': price,
+          'p_quantity': quantity,
+          's_id': seller_id,
+        }),
+        headers: {"Content-Type": "application/json"});
+  }
+
+  Future<http.Response> changeProductStatus(String product_id) async {
+    return await http.patch(Uri.parse('$baseURL/products/$product_id'));
+  }
 }

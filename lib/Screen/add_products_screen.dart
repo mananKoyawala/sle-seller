@@ -4,15 +4,16 @@ import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
 import 'package:sle_seller/provider/add_products_provider.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Package/PackageConstants.dart';
 
-class AddProductScreen extends StatelessWidget
+class AddProductScreen extends ConsumerWidget
     with text_with_button, formField, utils {
   AddProductScreen({super.key});
   AddProductsController ctr = AddProductsController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var isLoading = ref.watch(isAddProductLoadingProvider);
     return Scaffold(
       body: CP(
         h: 16,
@@ -67,6 +68,18 @@ class AddProductScreen extends StatelessWidget
                       textFormField(
                         context: context,
                         funValidate: (val) => Validator.fieldRequired(val),
+                        controller: ctr.productBrandCtr,
+                        isborder: false,
+                        hintText: "Product brand name",
+                        maxLength: 20,
+                        textInputType: TextInputType.text,
+                        fieldColor: Colors.green,
+                        onClickColor: Colors.green,
+                      ),
+                      sizeH25(),
+                      textFormField(
+                        context: context,
+                        funValidate: (val) => Validator.fieldRequired(val),
                         controller: ctr.productDescriptionCtr,
                         isborder: false,
                         hintText: "Product description",
@@ -79,9 +92,9 @@ class AddProductScreen extends StatelessWidget
                       textFormField(
                         context: context,
                         funValidate: (val) => Validator.onlyNumber(val),
-                        controller: ctr.productPiecesCtr,
+                        controller: ctr.productQuantityCtr,
                         isborder: false,
-                        hintText: "Product pieces",
+                        hintText: "Product quantity",
                         textInputType: TextInputType.number,
                         maxLength: 10,
                         fieldColor: Colors.green,
@@ -113,10 +126,10 @@ class AddProductScreen extends StatelessWidget
                 visible: visibility(),
                 child: simpleButton(
                     onTap: () {
-                      ctr.onSubmit();
+                      ctr.onSubmit(ref);
                     },
                     title: text(
-                      text: "Add Product",
+                      text: isLoading ? "Processing..." : "Add Product",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,
