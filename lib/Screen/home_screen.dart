@@ -3,12 +3,17 @@ import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
 import 'package:sle_seller/Screen/edit_product_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sle_seller/helper/product_api_helper.dart';
+import 'package:sle_seller/models/Product.dart';
+import 'package:sle_seller/provider/home_provider.dart';
 
-class HomeScreen extends StatelessWidget with text_with_button, utils {
+class HomeScreen extends ConsumerWidget with text_with_button, utils {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productList = ref.watch(productsProvider);
     return SafeArea(
       child: Scaffold(
         body: CP(
@@ -21,13 +26,22 @@ class HomeScreen extends StatelessWidget with text_with_button, utils {
                     sizeH(50),
                     text(text: "Your Products", fontSize: 22, fontWeight: 5),
                     sizeH25(),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return ProductContainer();
-                        }),
+                    productList.isLoading
+                        ? text(text: "Loading...", fontSize: 18)
+                        : productList.products.isEmpty
+                            ? Center(
+                                child: text(text: "No Products", fontSize: 18),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: productList.products.length,
+                                itemBuilder: (context, index) {
+                                  return ProductContainer(
+                                    ref: ref,
+                                    product: productList.products[index],
+                                  );
+                                }),
                     sizeH(40),
                   ],
                 ),
@@ -39,8 +53,10 @@ class HomeScreen extends StatelessWidget with text_with_button, utils {
 }
 
 class ProductContainer extends StatelessWidget with text_with_button, utils {
-  const ProductContainer({super.key});
-
+  ProductContainer({super.key, required this.product, required this.ref});
+  final Product product;
+  final WidgetRef ref;
+  ProductApiHelper helper = ProductApiHelper();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,6 +72,16 @@ class ProductContainer extends StatelessWidget with text_with_button, utils {
             margin: const EdgeInsets.all(5),
             decoration:
                 BoxDecoration(color: Colors.white, borderRadius: radius(20)),
+            child: ClipRRect(
+              borderRadius: radius(20),
+              child: Image.network(
+                product.image_url,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(child: text(text: "No Image", fontSize: 16));
+                },
+              ),
+            ),
           ),
           sizeW10(),
           Column(
@@ -63,26 +89,56 @@ class ProductContainer extends StatelessWidget with text_with_button, utils {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               sizeH10(),
-              text(text: "web cam", fontSize: 18, fontWeight: 5),
+              text(text: product.name, fontSize: 18, fontWeight: 5),
               sizeH(5),
               overFlowText(
                   h: 20,
                   w: getScreenWidth(context) / 2,
                   maxLines: 1,
-                  text: "logti desijddjdjgo isdj oidjojif",
+                  text: product.brand,
                   fontSize: 16,
                   overflow: TextOverflow.ellipsis),
               sizeH(10),
-              text(text: "999₹ / Piece", fontSize: 16, textColor: Colors.green),
+              text(
+                  text: "${product.price}₹ / Piece",
+                  fontSize: 16,
+                  textColor: Colors.green),
               sizeH(10),
-              simpleButton(
-                  height: 45,
-                  width: 65,
-                  onTap: () {
-                    Navigation.pushMaterial(EditProductScreen());
-                  },
-                  title:
-                      text(text: "Edit", fontSize: 16, textColor: Colors.white))
+              Row(
+                children: [
+                  simpleButton(
+                      height: 45,
+                      width: 65,
+                      onTap: () {
+                        Navigation.pushMaterial(EditProductScreen());
+                      },
+                      title: text(
+                          text: "Edit", fontSize: 16, textColor: Colors.white)),
+                  sizeW(5),
+                  iconButton(
+                    onTap: () async {
+                      var isStatusChanged =
+                          await helper.changeProductStatus(product.id);
+                      if (isStatusChanged) {
+                        // it will fetch data if product status change
+                        ref.read(productsProvider.notifier).fetchData();
+                      }
+                    },
+                    icon: product.status
+                        ? const Icon(Icons.visibility_off, color: Colors.red)
+                        : const Icon(Icons.visibility, color: Colors.green),
+                  ),
+                  iconButton(
+                      onTap: () async {
+                        var isDeleted = await helper.deleteProduct(product.id);
+                        if (isDeleted) {
+                          // it will fetch data if product wiil be delete
+                          ref.read(productsProvider.notifier).fetchData();
+                        }
+                      },
+                      icon: const Icon(Icons.delete, color: Colors.red))
+                ],
+              )
             ],
           )
         ],

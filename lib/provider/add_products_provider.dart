@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sle_seller/helper/product_api_helper.dart';
 import 'package:sle_seller/provider/shared_preference.dart';
 
+import 'home_provider.dart';
+
 class AddProductsController {
   var onClicked = false;
   final formKey = GlobalKey<FormState>();
@@ -44,7 +46,7 @@ class AddProductsController {
       onChangeAddProductProvider(ref, true);
       int quantity = int.parse(productQuantityCtr.text);
       int price = int.parse(productPriceCtr.text);
-      await helper.addProduct(
+      var isAdded = await helper.addProduct(
           productNameCtr.text,
           category,
           productBrandCtr.text,
@@ -53,6 +55,10 @@ class AddProductsController {
           pref.id,
           quantity,
           price);
+      if (isAdded) {
+        // it will fetch data if product wiil be delete
+        ref.read(productsProvider.notifier).fetchData();
+      }
       onChangeAddProductProvider(ref, false);
       onClicked = false;
       category = "Electronics";

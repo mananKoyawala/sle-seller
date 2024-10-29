@@ -8,7 +8,7 @@ class ProductApiHelper {
   ApiService apiService = ApiService();
   SharedPreference pref = SharedPreference();
 
-  Future<void> addProduct(String name, category, brand, description, image,
+  Future<bool> addProduct(String name, category, brand, description, image,
       seller_id, int quantity, int price) async {
     final response = await apiService.addProduct(
         name, category, brand, description, image, seller_id, quantity, price);
@@ -20,10 +20,12 @@ class ProductApiHelper {
       // printDebug(">>>${product.name}");
       toast("Product added.");
       Navigation.pop();
+      return true;
     } else {
       final data = responseBody["error"] ?? '';
       printDebug(">>>$data");
       toast("Failed to add product");
+      return false;
     }
   }
 
@@ -45,6 +47,38 @@ class ProductApiHelper {
       final data = responseBody["error"] ?? '';
       printDebug(">>>$data");
       return [];
+    }
+  }
+
+  Future<bool> deleteProduct(productId) async {
+    final response = await apiService.deleteProduct(productId);
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final data = responseBody["message"] ?? 'Product deleted;';
+      toast(data);
+      return true;
+    } else {
+      final data = responseBody["error"] ?? 'failed to delete product;';
+      toast(data);
+      printDebug(">>>$data");
+      return false;
+    }
+  }
+
+  Future<bool> changeProductStatus(productId) async {
+    final response = await apiService.changeProductStatus(productId);
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final data = responseBody["message"] ?? 'Product status changed;';
+      toast(data);
+      return true;
+    } else {
+      final data = responseBody["error"] ?? 'failed to change product status;';
+      toast(data);
+      printDebug(">>>$data");
+      return false;
     }
   }
 }

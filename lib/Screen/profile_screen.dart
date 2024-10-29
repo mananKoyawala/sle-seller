@@ -10,6 +10,7 @@ import 'package:sle_seller/Screen/update_password_screen.dart';
 import 'package:sle_seller/helper/seller_api_helper.dart';
 import 'package:sle_seller/provider/Auth/signup_provider.dart';
 import 'package:sle_seller/provider/dashboard_provider.dart';
+import 'package:sle_seller/provider/home_provider.dart';
 import 'package:sle_seller/provider/shared_preference.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -155,6 +156,7 @@ class ProfileScreen extends ConsumerWidget with text_with_button, utils {
                         _logoutDetails();
                         onChangeDashboardProvider(ref, true);
                         changeIsLoginOpen(ref, true);
+                        // ref.read(productsProvider.notifier).resetProducts();
                         ref.read(termsAndConditionProvider.notifier).state =
                             false;
                         Navigation.pushMaterialAndRemoveUntil(AuthScreen());
