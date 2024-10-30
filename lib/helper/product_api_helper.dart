@@ -81,4 +81,22 @@ class ProductApiHelper {
       return false;
     }
   }
+
+  Future<bool> updateProductDetails(String product_id, name, category, brand,
+      description, image, seller_id, int quantity, price) async {
+    final response = await apiService.updateProductDetails(product_id, name,
+        category, brand, description, image, seller_id, quantity, price);
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      toast("Product details updated.");
+      Navigation.pop();
+      return true;
+    } else {
+      final data = responseBody["error"] ?? '';
+      printDebug(">>>$data");
+      toast("Failed to update product details");
+      return false;
+    }
+  }
 }
