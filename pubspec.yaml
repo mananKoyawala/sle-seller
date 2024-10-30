@@ -28,6 +28,7 @@ dev_dependencies:
   http: ^1.2.2
   shared_preferences: ^2.3.2
   flutter_dotenv: ^5.2.1
+  shimmer: ^3.0.0
 
 flutter:
   uses-material-design: true
