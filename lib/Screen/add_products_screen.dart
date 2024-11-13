@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
@@ -6,14 +8,19 @@ import 'package:sle_seller/provider/add_products_provider.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Package/PackageConstants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProductScreen extends ConsumerWidget
     with text_with_button, formField, utils {
   AddProductScreen({super.key});
   AddProductsController ctr = AddProductsController();
+  final ImagePicker _picker = ImagePicker();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isLoading = ref.watch(isAddProductLoadingProvider);
+    var imageUploding = ref.watch(addProductImageUploadedProvider);
+
     return Scaffold(
       body: CP(
         h: 16,
@@ -119,6 +126,29 @@ class AddProductScreen extends ConsumerWidget
                         onClickColor: Colors.green,
                       ),
                       // * image is remaing
+                      sizeH25(),
+                      textFormField(
+                        context: context,
+                        funValidate: (val) => null,
+                        prefixIcon:
+                            const Icon(Icons.image, color: Colors.green),
+                        isborder: true,
+                        hintText: ctr.image == null
+                            ? "Pick profile picture"
+                            : "Image is picked",
+                        readOnly: true,
+                        fieldColor: Colors.green,
+                        onClickColor: Colors.green,
+                        onTap: () async {
+                          final XFile? pickedFile = await _picker.pickImage(
+                              source: ImageSource.gallery);
+
+                          if (pickedFile != null) {
+                            ctr.image = File(pickedFile.path);
+                            printDebug(">>>${ctr.image}");
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -134,7 +164,11 @@ class AddProductScreen extends ConsumerWidget
                       ctr.onSubmit(ref);
                     },
                     title: text(
-                      text: isLoading ? "Processing..." : "Add Product",
+                      text: imageUploding
+                          ? 'Image being uploaded...'
+                          : isLoading
+                              ? "Processing..."
+                              : "Add Product",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,
