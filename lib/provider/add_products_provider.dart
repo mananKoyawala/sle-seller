@@ -14,30 +14,36 @@ class AddProductsController {
   final productQuantityCtr = TextEditingController();
   final productPriceCtr = TextEditingController();
   List<String> productCategories = [
-    "Electronics",
-    "Computers and laptops",
-    "Smartphones and tablets",
-    "Gaming consoles and accessories",
-    "Audio and video equipment",
-    "Cameras and photography gear",
-    "Home appliances",
-    "Smart home devices",
-    "Fashion and Apparel",
-    "Clothing for men, women, and children",
     "Footwear",
-    "Accessories (bags, hats, jewelry)",
-    "Beauty and personal care products",
-    "Watches and eyewear",
-    "Home and Garden",
+    "Grocery",
+    "Food & Beverages",
+    "Electronics",
+    "Home & Kitchen",
+    "Fashion & Clothing",
+    "Health & Beauty",
+    "Sports & Outdoors",
+    "Toys & Games",
+    "Books & Stationery",
+    "Automotive",
     "Furniture",
-    "Home decor",
-    "Kitchenware",
-    "Bedding and linens",
-    "Appliances",
-    "Gardening tools and supplies",
-    "Outdoor furniture and equipment",
+    "Jewelry & Accessories",
+    "Baby & Kids",
+    "Pet Supplies",
+    "Office Supplies",
+    "Travel & Luggage",
+    "Musical Instruments",
+    "Gardening",
+    "Hardware & Tools",
+    "Art & Craft",
+    "Software & Apps",
+    "Smartphones & Tablets",
+    "Computers & Laptops",
+    "Cameras & Photography",
+    "Gaming",
+    "Hobbies & Collections",
+    "Industrial & Equipments",
   ];
-  String category = "Electronics";
+  String category = "Footwear";
   ProductApiHelper helper = ProductApiHelper();
   SharedPreference pref = SharedPreference();
   void onSubmit(WidgetRef ref) async {
@@ -86,3 +92,7 @@ final isAddProductLoadingProvider = StateProvider<bool>((ref) {
 void onChangeAddProductProvider(WidgetRef ref, bool val) {
   ref.read(isAddProductLoadingProvider.notifier).state = val;
 }
+
+// static const List<String> categories = [
+   
+//   ];

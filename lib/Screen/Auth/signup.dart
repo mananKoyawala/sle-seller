@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
 import 'package:sle_seller/provider/Auth/signup_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Signup extends ConsumerWidget with text_with_button, formField, utils {
   Signup({super.key});
 
   SignupController ctr = SignupController();
+  final ImagePicker _picker = ImagePicker();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isObsecure = ref.watch(obsecureSingupTextProvider);
     var isTermsAccepted = ref.watch(termsAndConditionProvider);
+    Future<void> datePicker(BuildContext context) async {
+      DateTime? picked = await showDatePicker(
+          context: context,
+          firstDate: DateTime(1960),
+          lastDate: DateTime(2019));
+
+      if (picked != null) {
+        ctr.changeDate(picked.toString().split(" ")[0]);
+      }
+    }
+
     return Column(
       children: [
         Column(
@@ -94,6 +109,44 @@ class Signup extends ConsumerWidget with text_with_button, formField, utils {
                     textInputAction: TextInputAction.done,
                     fieldColor: Colors.green,
                     onClickColor: Colors.green,
+                  ),
+                  sizeH25(),
+                  textFormField(
+                    context: context,
+                    funValidate: (val) => Validator.fieldRequired(val),
+                    controller: ctr.dateCtr,
+                    prefixIcon:
+                        const Icon(Icons.date_range, color: Colors.green),
+                    isborder: true,
+                    hintText: "Date of Birth",
+                    readOnly: true,
+                    fieldColor: Colors.green,
+                    onClickColor: Colors.green,
+                    onTap: () {
+                      datePicker(context);
+                    },
+                  ),
+                  sizeH25(),
+                  textFormField(
+                    context: context,
+                    funValidate: (val) => null,
+                    prefixIcon: const Icon(Icons.image, color: Colors.green),
+                    isborder: true,
+                    hintText: ctr.image == null
+                        ? "Pick profile picture"
+                        : "Image is picked",
+                    readOnly: true,
+                    fieldColor: Colors.green,
+                    onClickColor: Colors.green,
+                    onTap: () async {
+                      final XFile? pickedFile =
+                          await _picker.pickImage(source: ImageSource.gallery);
+
+                      if (pickedFile != null) {
+                        ctr.image = File(pickedFile.path);
+                        printDebug(">>>${ctr.image}");
+                      }
+                    },
                   ),
                 ],
               ),

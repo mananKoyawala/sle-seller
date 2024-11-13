@@ -13,6 +13,7 @@ class CompanyDetails extends ConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isLoading = ref.watch(isLoadingSignupProvider);
+    var isImageUploaded = ref.watch(isSignupImageUploadedProvider);
 
     return Scaffold(
       body: CP(
@@ -123,7 +124,11 @@ class CompanyDetails extends ConsumerWidget
                       ctr.onSubmit2(ref);
                     },
                     title: text(
-                      text: isLoading ? "Processing..." : "SING UP",
+                      text: isImageUploaded
+                          ? 'Image being uploaded...'
+                          : isLoading
+                              ? "Processing..."
+                              : "SING UP",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,

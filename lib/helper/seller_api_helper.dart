@@ -47,7 +47,7 @@ class SellerApiHelper {
     }
   }
 
-  Future<void> sellerSignup(
+  Future<bool> sellerSignup(
       String first_name,
       last_name,
       email,
@@ -96,15 +96,16 @@ class SellerApiHelper {
       await pref.getUserData();
       await Future.delayed(const Duration(milliseconds: 150));
       toast("Registration completed");
-      Navigation.pushMaterialAndRemoveUntil(const Dashboard());
+      return true;
     } else {
       final data = responseBody['error'] ?? 'Failed to register seller';
       printDebug(">>>$data");
       if (data.toString().contains("duplicate key")) {
         toast("Email address already exist");
-        return;
+        return false;
       }
       toast('Failed to register seller');
+      return false;
     }
   }
 

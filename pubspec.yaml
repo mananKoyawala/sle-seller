@@ -29,6 +29,8 @@ dev_dependencies:
   shared_preferences: ^2.3.2
   flutter_dotenv: ^5.2.1
   shimmer: ^3.0.0
+  firebase_storage: ^12.3.5
+  image_picker: ^1.1.2
 
 flutter:
   uses-material-design: true

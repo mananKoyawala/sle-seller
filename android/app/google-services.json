@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "21882547294",
+    "project_id": "all-in-one-3bdcb",
+    "storage_bucket": "all-in-one-3bdcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21882547294:android:5b9d48efcaba37b28058cf",
+        "android_client_info": {
+          "package_name": "com.example.flutter_brush_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiA-j1ap3dwN7A3pfaUUmH-uFogaOeHsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21882547294:android:c81d9787c8ef69848058cf",
+        "android_client_info": {
+          "package_name": "com.example.flutter_freebie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiA-j1ap3dwN7A3pfaUUmH-uFogaOeHsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21882547294:android:56ec0298640ed4098058cf",
+        "android_client_info": {
+          "package_name": "com.example.my_images"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiA-j1ap3dwN7A3pfaUUmH-uFogaOeHsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21882547294:android:b5e74a430a666acd8058cf",
+        "android_client_info": {
+          "package_name": "com.example.sle_buyer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiA-j1ap3dwN7A3pfaUUmH-uFogaOeHsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21882547294:android:b1262324dcd8ea3e8058cf",
+        "android_client_info": {
+          "package_name": "com.manankoyawala.sle_seller"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiA-j1ap3dwN7A3pfaUUmH-uFogaOeHsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

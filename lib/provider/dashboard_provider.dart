@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DashboardController {}
-
 final dashboardProvider = StateProvider<bool>((ref) {
   return true;
 });
