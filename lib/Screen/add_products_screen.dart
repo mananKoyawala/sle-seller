@@ -125,7 +125,6 @@ class AddProductScreen extends ConsumerWidget
                         fieldColor: Colors.green,
                         onClickColor: Colors.green,
                       ),
-                      // * image is remaing
                       sizeH25(),
                       textFormField(
                         context: context,

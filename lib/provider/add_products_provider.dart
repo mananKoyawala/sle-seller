@@ -107,6 +107,7 @@ class AddProductsController {
     productQuantityCtr.clear();
     productPriceCtr.clear();
     productBrandCtr.clear();
+    image = null;
     image_url = "";
   }
 

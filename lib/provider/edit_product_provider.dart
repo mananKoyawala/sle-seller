@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sle_seller/helper/product_api_helper.dart';
 import 'package:sle_seller/provider/home_provider.dart';
 import 'package:sle_seller/provider/shared_preference.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import '../Package/PackageConstants.dart';
 
 class EditProductController {
   bool isClicked = false;
@@ -12,6 +17,8 @@ class EditProductController {
   final productBrandCtr = TextEditingController();
   final productQuantityCtr = TextEditingController();
   final productPriceCtr = TextEditingController();
+  File? image;
+  String image_url = "";
   List<String> productCategories = [
     "Footwear",
     "Grocery",
@@ -44,11 +51,36 @@ class EditProductController {
   ];
   String category = "Footwear";
 
-  void onSubmit(String productId, String image_url, WidgetRef ref) async {
+  void onSubmit(String productId, String old_image_url, WidgetRef ref) async {
     ProductApiHelper helper = ProductApiHelper();
     SharedPreference pref = SharedPreference();
     if (formKey.currentState!.validate() && !isClicked) {
       isClicked = true;
+      image_url = old_image_url;
+      editProductImageUploaded(ref, true);
+
+      if (image != null) {
+        // delete current image
+        bool isDeleted = await _deleteImage(old_image_url);
+        if (!isDeleted) {
+          toast("Failed to update image, Try again later");
+          isClicked = false;
+          editProductImageUploaded(ref, false);
+          return;
+        }
+
+        // upload new image
+        bool isImageUploaded = await _uploadImage();
+        if (!isImageUploaded) {
+          toast("Failed to upload image");
+          isClicked = false;
+          editProductImageUploaded(ref, false);
+          return;
+        }
+      }
+
+      editProductImageUploaded(ref, false);
+
       changeEditProductProvider(ref, true);
       final isUpdated = await helper.updateProductDetails(
           productId,
@@ -82,12 +114,48 @@ class EditProductController {
     category = val;
   }
 
+  Future<bool> _deleteImage(String imageUrl) async {
+    try {
+      // Delete the image at the given URL
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+      printDebug(">>>Image deleted successfully.");
+      return true;
+    } catch (e) {
+      printDebug(">>>Error deleting image: $e");
+      return false;
+    }
+  }
+
+  Future<bool> _uploadImage() async {
+    if (image == null) return false;
+
+    try {
+      // Define a unique path for the image
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('sle/products/$fileName');
+
+      // Upload the file
+      await firebaseStorageRef.putFile(image!);
+
+      // Get the download URL
+      image_url = await firebaseStorageRef.getDownloadURL();
+      printDebug(">>>Image uploaded successfully. Download URL: $image_url");
+      return true;
+    } catch (e) {
+      printDebug(">>>Error uploading image: $e");
+      return false;
+    }
+  }
+
   void resetAll() {
     productNameCtr.clear();
     productBrandCtr.clear();
     productDescriptionCtr.clear();
     productQuantityCtr.clear();
     productPriceCtr.clear();
+    image = null;
+    image_url = "";
   }
 }
 
@@ -97,4 +165,11 @@ final editProductProvider = StateProvider<bool>((ref) {
 
 void changeEditProductProvider(WidgetRef ref, bool val) {
   ref.read(editProductProvider.notifier).state = val;
+}
+
+// to show image being uploaded
+final editProductImageUploadedProvider = StateProvider<bool>((ref) => false);
+
+void editProductImageUploaded(WidgetRef ref, bool val) {
+  ref.read(editProductImageUploadedProvider.notifier).state = val;
 }

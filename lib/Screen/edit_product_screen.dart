@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
@@ -7,6 +9,7 @@ import 'package:sle_seller/provider/edit_product_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Package/PackageConstants.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProductScreen extends ConsumerWidget
     with text_with_button, formField, utils {
@@ -14,6 +17,8 @@ class EditProductScreen extends ConsumerWidget
   final Product product;
   bool called = false;
   EditProductController ctr = EditProductController();
+  final ImagePicker _picker = ImagePicker();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!called) {
@@ -23,6 +28,7 @@ class EditProductScreen extends ConsumerWidget
       called = true;
     }
     final isLoading = ref.watch(editProductProvider);
+    final isImageUploading = ref.watch(editProductImageUploadedProvider);
     return Scaffold(
       body: CP(
         h: 16,
@@ -127,6 +133,29 @@ class EditProductScreen extends ConsumerWidget
                         fieldColor: Colors.green,
                         onClickColor: Colors.green,
                       ),
+                      sizeH25(),
+                      textFormField(
+                        context: context,
+                        funValidate: (val) => null,
+                        prefixIcon:
+                            const Icon(Icons.image, color: Colors.green),
+                        isborder: true,
+                        hintText: ctr.image == null
+                            ? "Pick profile picture"
+                            : "Image is picked",
+                        readOnly: true,
+                        fieldColor: Colors.green,
+                        onClickColor: Colors.green,
+                        onTap: () async {
+                          final XFile? pickedFile = await _picker.pickImage(
+                              source: ImageSource.gallery);
+
+                          if (pickedFile != null) {
+                            ctr.image = File(pickedFile.path);
+                            printDebug(">>>${ctr.image}");
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -142,8 +171,11 @@ class EditProductScreen extends ConsumerWidget
                       ctr.onSubmit(product.id, product.image_url, ref);
                     },
                     title: text(
-                      text:
-                          isLoading ? "Processing..." : "Edit Product Details",
+                      text: isImageUploading
+                          ? 'Image being uploaded...'
+                          : isLoading
+                              ? "Processing..."
+                              : "Edit Product Details",
                       fontSize: 18,
                       fontWeight: 5,
                       textColor: Colors.white,

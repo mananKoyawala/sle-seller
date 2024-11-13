@@ -92,13 +92,16 @@ class ProductContainer extends StatelessWidget with text_with_button, utils {
                     color: Colors.white, borderRadius: radius(20)),
                 child: ClipRRect(
                   borderRadius: radius(20),
-                  child: Image.network(
-                    product.image_url,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                          child: text(text: "No Image", fontSize: 16));
-                    },
+                  child: SizedBox(
+                    height: 170,
+                    child: Image.network(
+                      product.image_url,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                            child: text(text: "No Image", fontSize: 16));
+                      },
+                    ),
                   ),
                 ),
               ),
