@@ -49,6 +49,7 @@ class EditProductScreen extends ConsumerWidget
                 key: ctr.formKey,
                 child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       textFormField(
                         context: context,
@@ -133,6 +134,11 @@ class EditProductScreen extends ConsumerWidget
                         fieldColor: Colors.green,
                         onClickColor: Colors.green,
                       ),
+                      sizeH25(),
+                      text(
+                          text: "Select only image if you want to change",
+                          fontSize: 14,
+                          fontWeight: 5),
                       sizeH25(),
                       textFormField(
                         context: context,
