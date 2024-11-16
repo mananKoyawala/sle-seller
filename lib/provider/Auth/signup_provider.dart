@@ -9,6 +9,9 @@ import '../../Screen/Auth/company_details.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../Screen/dashboard.dart';
+import '../../Service/NavigatorKey.dart';
+import '../../connection/connectivity_helper.dart';
+import '../../utils/widget/no_internet.dart';
 
 class SignupController {
   // for accessing data of every stage
@@ -114,6 +117,12 @@ class SignupController {
 
   Future<bool> _uploadImage() async {
     if (image == null) return false;
+
+    // * check internet here
+    if (!await ConnectivityHelper.hasInternetConnection()) {
+      showNoInternetDialog(context: navigatorContext);
+      return false;
+    }
 
     try {
       // Define a unique path for the image

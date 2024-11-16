@@ -1,53 +1,97 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/helper/product_api_helper.dart';
 import 'package:sle_seller/models/Product.dart';
 
+import '../connection/connectivity_helper.dart';
+
 class ProductState {
   final List<Product> products;
   final bool isLoading;
+  // final bool? productsLoaded;
+  final String? retryMessage;
 
-  ProductState({required this.products, required this.isLoading});
+  ProductState(
+      {required this.products, required this.isLoading, this.retryMessage});
 }
 
 // Update ProductNotifier to use ProductState
 class ProductNotifier extends AutoDisposeNotifier<ProductState> {
   final ProductApiHelper helper;
-  bool _isInitialized = false;
+  Timer? retryTimer; // Timer for periodic checks
 
   ProductNotifier() : helper = ProductApiHelper();
 
   @override
   ProductState build() {
     printDebug(">>>passed");
-    state = ProductState(products: [], isLoading: true);
-    // fetchData();
-    init(); // Initialize data if necessary
+    state = ProductState(
+      products: [],
+      isLoading: true,
+    );
+    // startPeriodicCheck();
+    init();
     return state;
   }
 
   void init() {
-    if (!_isInitialized) {
-      fetchData();
-      _isInitialized = true; // Set as initialized
-    }
+    fetchData();
   }
 
   Future<void> fetchData() async {
-    state = ProductState(products: state.products, isLoading: true);
+    state = ProductState(
+      products: state.products,
+      isLoading: true,
+    );
+
+    // Check internet connectivity before making the API call
+    final hasInternet = await ConnectivityHelper.hasInternetConnection();
+    if (!hasInternet) {
+      printDebug(">>> No internet connection");
+      state = ProductState(
+        products: [],
+        isLoading: false,
+        retryMessage:
+            'No internet connection. \nPlease check your connection and retry.',
+      );
+      return;
+    }
     try {
       final products = await helper.getAllSellerProducts();
-      state = ProductState(products: products, isLoading: false);
+      state = ProductState(
+          products: products,
+          isLoading: false,
+          retryMessage: 'No products available at the moment.');
     } catch (e) {
-      state = ProductState(products: [], isLoading: false);
+      state = ProductState(
+          products: [],
+          isLoading: false,
+          retryMessage: 'Failed to load products. \nTap Retry to try again.');
       printDebug(e.toString());
       toast("Failed to load products");
     }
   }
 
+  // periodically check that internet has gone if no and products are empty then it will fetch products
+  // void startPeriodicCheck() {
+  //   retryTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+  //     printDebug(">>>called");
+  //     // Check internet connection
+  //     final hasInternet = await ConnectivityHelper.hasInternetConnection();
+  //     if (hasInternet && state.products.isEmpty) {
+  //       printDebug(">>> Internet available, retrying fetch");
+  //       await fetchData(); // Retry fetching data
+  //     }
+  //   });
+  // }
+
   void resetProducts() {
-    state = ProductState(products: [], isLoading: false);
-    _isInitialized = false; // Reset initialized state on logout
+    state = ProductState(
+      products: [],
+      isLoading: false,
+    );
   }
 }
 

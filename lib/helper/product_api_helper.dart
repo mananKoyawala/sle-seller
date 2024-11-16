@@ -10,14 +10,20 @@ class ProductApiHelper {
 
   Future<bool> addProduct(String name, category, brand, description, image,
       seller_id, int quantity, int price) async {
-    final response = await apiService.addProduct(
-        name, category, brand, description, image, seller_id, quantity, price);
+    final response = await apiService
+        .performRequest(method: 'POST', endpoint: '/products', body: {
+      'p_name': name,
+      'p_category': category,
+      'p_brand': brand,
+      'p_description': description,
+      'p_image': image,
+      'p_price': price,
+      'p_quantity': quantity,
+      's_id': seller_id,
+    });
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      // final data = responseBody["data"] ?? '';
-      // final Product product = Product.fromJson(data);
-      // printDebug(">>>${product.name}");
       toast("Product added.");
       Navigation.pop();
       return true;
@@ -33,7 +39,10 @@ class ProductApiHelper {
     await Future.delayed(const Duration(milliseconds: 150));
     printDebug(">>>seller_id ${pref.id}");
 
-    final response = await apiService.getAllProductsBySeller(pref.id);
+    final response = await apiService.performRequest(
+      method: 'GET',
+      endpoint: '/products/category?s_id=${pref.id}',
+    );
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -51,7 +60,10 @@ class ProductApiHelper {
   }
 
   Future<bool> deleteProduct(productId) async {
-    final response = await apiService.deleteProduct(productId);
+    final response = await apiService.performRequest(
+      method: 'DELETE',
+      endpoint: '/products/$productId',
+    );
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -60,14 +72,17 @@ class ProductApiHelper {
       return true;
     } else {
       final data = responseBody["error"] ?? 'failed to delete product;';
-      toast(data);
+      toast("Failed to delete product");
       printDebug(">>>$data");
       return false;
     }
   }
 
   Future<bool> changeProductStatus(productId) async {
-    final response = await apiService.changeProductStatus(productId);
+    final response = await apiService.performRequest(
+      method: 'PATCH',
+      endpoint: '/products/$productId',
+    );
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -84,8 +99,19 @@ class ProductApiHelper {
 
   Future<bool> updateProductDetails(String product_id, name, category, brand,
       description, image, seller_id, int quantity, price) async {
-    final response = await apiService.updateProductDetails(product_id, name,
-        category, brand, description, image, seller_id, quantity, price);
+    final response = await apiService.performRequest(
+        method: 'PUT',
+        endpoint: '/products/$product_id',
+        body: {
+          'p_name': name,
+          'p_category': category,
+          'p_brand': brand,
+          'p_description': description,
+          'p_image': image,
+          'p_price': price,
+          'p_quantity': quantity,
+          's_id': seller_id,
+        });
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {

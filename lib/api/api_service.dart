@@ -1,69 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sle_seller/Package/PackageConstants.dart';
+import 'package:sle_seller/Service/NavigatorKey.dart';
+import 'package:sle_seller/utils/constants.dart';
+
+import '../connection/connectivity_helper.dart';
+import '../utils/widget/no_internet.dart';
 
 class ApiService {
   final String baseURL = dotenv.env['API_URL'] ?? '';
-
-  Future<http.Response> sellerLogin(String email, password) async {
-    return await http.post(
-      Uri.parse('$baseURL/sellers/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(
-        {'s_email': email, 's_password': password},
-      ),
-    );
-  }
-
-  Future<http.Response> sellerSignup(
-      String first_name,
-      last_name,
-      email,
-      password,
-      image_url,
-      address,
-      phone,
-      pan_card,
-      dob,
-      company_name,
-      description,
-      gst_number) async {
-    return await http.post(
-      Uri.parse('$baseURL/sellers/signup'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(
-        {
-          's_first_name': first_name,
-          's_last_name': last_name,
-          's_email': email,
-          's_password': password,
-          's_image_url': image_url,
-          's_address': address,
-          's_phone': phone,
-          's_pan_card': pan_card,
-          's_dob': dob,
-          's_company_name': company_name,
-          's_description': description,
-          's_gst_number': gst_number,
-        },
-      ),
-    );
-  }
-
-  Future<http.Response> sellerUpdatePassword(
-      String email, password, confirmPassword) async {
-    return await http.patch(
-      Uri.parse('$baseURL/sellers'),
-      body: jsonEncode(
-        {
-          's_email': email,
-          's_password': password,
-          's_confirm_password': confirmPassword
-        },
-      ),
-      headers: {"Content-Type": "application/json"},
-    );
-  }
 
   Future<http.Response> sellerDeleteAccount(String id) async {
     return await http.delete(
@@ -71,52 +17,59 @@ class ApiService {
     );
   }
 
-  Future<http.Response> addProduct(String name, category, brand, description,
-      image, seller_id, int quantity, price) async {
-    return await http.post(Uri.parse('$baseURL/products'),
-        body: jsonEncode({
-          'p_name': name,
-          'p_category': category,
-          'p_brand': brand,
-          'p_description': description,
-          'p_image': image,
-          'p_price': price,
-          'p_quantity': quantity,
-          's_id': seller_id,
-        }),
-        headers: {"Content-Type": "application/json"});
-  }
-
   Future<http.Response> getProductByID(String product_id) async {
     return await http.get(Uri.parse('$baseURL/products/$product_id'));
   }
 
-  Future<http.Response> deleteProduct(String product_id) async {
-    return await http.delete(Uri.parse('$baseURL/products/$product_id'));
-  }
+  // * common function that performs final api calls which handles connectivity checks and potential exceptions
+  Future<http.Response> performRequest({
+    required String method,
+    required String endpoint,
+    Map<String, String>? headers,
+    Map<String, dynamic>? body,
+    Function? onNoInternet, // call back for handling no internet
+  }) async {
+    // * check here internet connectivity
+    final hasInternet = await ConnectivityHelper.hasInternetConnection();
+    printDebug(">>>*$hasInternet");
+    if (!hasInternet) {
+      if (onNoInternet != null) {
+        onNoInternet();
+      } else {
+        showNoInternetDialog(context: navigatorContext);
+      }
+      return http.Response('{"error":"No Internet Connection"}', 503);
+    }
+    // * prepare request
+    final uri = Uri.parse('$baseURL$endpoint');
+    headers ??= {'Content-Type': 'application/json'};
 
-  Future<http.Response> getAllProductsBySeller(String seller_id) async {
-    return await http
-        .get(Uri.parse('$baseURL/products/category?s_id=$seller_id'));
-  }
+    http.Response response =
+        http.Response('{"error":"request is failed"}', 503);
+    try {
+      switch (method) {
+        case 'GET':
+          response = await http.get(uri, headers: headers);
+        case 'POST':
+          response =
+              await http.post(uri, headers: headers, body: jsonEncode(body));
+        case 'PUT':
+          response =
+              await http.put(uri, headers: headers, body: jsonEncode(body));
+        case 'PATCH':
+          response =
+              await http.patch(uri, headers: headers, body: jsonEncode(body));
+        case 'DELETE':
+          response = await http.delete(uri, headers: headers);
+        default:
+          throw ('Unsupported HTTP method');
+      }
 
-  Future<http.Response> updateProductDetails(String product_id, name, category,
-      brand, description, image, seller_id, int quantity, price) async {
-    return await http.put(Uri.parse('$baseURL/products/$product_id'),
-        body: jsonEncode({
-          'p_name': name,
-          'p_category': category,
-          'p_brand': brand,
-          'p_description': description,
-          'p_image': image,
-          'p_price': price,
-          'p_quantity': quantity,
-          's_id': seller_id,
-        }),
-        headers: {"Content-Type": "application/json"});
-  }
-
-  Future<http.Response> changeProductStatus(String product_id) async {
-    return await http.patch(Uri.parse('$baseURL/products/$product_id'));
+      return response;
+    } catch (e) {
+      printDebug('>>>Error during API call: $e');
+      showSomeThingWrongSnackBar();
+      return response;
+    }
   }
 }

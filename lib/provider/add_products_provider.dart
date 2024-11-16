@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sle_seller/Service/NavigatorKey.dart';
+import 'package:sle_seller/connection/connectivity_helper.dart';
 import 'package:sle_seller/helper/product_api_helper.dart';
 import 'package:sle_seller/provider/shared_preference.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sle_seller/utils/widget/no_internet.dart';
 
 import '../Package/PackageConstants.dart';
 import 'home_provider.dart';
@@ -113,6 +116,12 @@ class AddProductsController {
 
   Future<bool> _uploadImage() async {
     if (image == null) return false;
+
+    // * check internet here
+    if (!await ConnectivityHelper.hasInternetConnection()) {
+      showNoInternetDialog(context: navigatorContext);
+      return false;
+    }
 
     try {
       // Define a unique path for the image

@@ -16,6 +16,7 @@ class HomeScreen extends ConsumerWidget with text_with_button, utils {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productList = ref.watch(productsProvider);
+
     return SafeArea(
       child: Scaffold(
         body: CP(
@@ -34,14 +35,36 @@ class HomeScreen extends ConsumerWidget with text_with_button, utils {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: 10,
                             itemBuilder: (context, index) {
-                              return ProductShimmerContainer();
+                              return const ProductShimmerContainer();
                             })
                         : productList.products.isEmpty
                             ? SizedBox(
                                 height: 250,
                                 child: Center(
-                                  child:
-                                      text(text: "No Products", fontSize: 18),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      sizeH(50),
+                                      text(
+                                          text: productList.retryMessage!,
+                                          textAlign: TextAlign.center,
+                                          fontSize: 18),
+                                      sizeH(60),
+                                      simpleButton(
+                                          width: getScreenWidth(context) / 2,
+                                          borderRadius: 30,
+                                          onTap: () async {
+                                            await ref
+                                                .read(productsProvider.notifier)
+                                                .fetchData();
+                                          },
+                                          title: text(
+                                              text: "Retry",
+                                              fontSize: 18,
+                                              textColor: Colors.white,
+                                              fontWeight: 5))
+                                    ],
+                                  ),
                                 ),
                               )
                             : ListView.builder(
@@ -177,7 +200,7 @@ class ProductContainer extends StatelessWidget with text_with_button, utils {
 }
 
 class ProductShimmerContainer extends StatelessWidget {
-  const ProductShimmerContainer({Key? key}) : super(key: key);
+  const ProductShimmerContainer({super.key});
 
   @override
   Widget build(BuildContext context) {

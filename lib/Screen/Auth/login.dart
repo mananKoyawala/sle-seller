@@ -3,8 +3,11 @@ import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/Package/TextFormField.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
 import 'package:sle_seller/Package/Utils.dart';
+import 'package:sle_seller/Service/NavigatorKey.dart';
 import 'package:sle_seller/provider/Auth/login_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../utils/widget/no_internet.dart';
 
 class Login extends ConsumerWidget with text_with_button, formField, utils {
   Login({super.key});
@@ -67,6 +70,23 @@ class Login extends ConsumerWidget with text_with_button, formField, utils {
             },
             title: text(
               text: isLoading ? "Processing..." : "LOGIN",
+              fontSize: 18,
+              fontWeight: 5,
+              textColor: Colors.white,
+            ),
+            backgroundColor: Colors.green),
+        sizeH10(),
+        simpleButton(
+            onTap: () async {
+              showNoInternetDialog(
+                  context: navigatorContext,
+                  onPressed: () {
+                    Navigation.pop();
+                    printDebug(">>>King called");
+                  });
+            },
+            title: text(
+              text: "Test it",
               fontSize: 18,
               fontWeight: 5,
               textColor: Colors.white,
