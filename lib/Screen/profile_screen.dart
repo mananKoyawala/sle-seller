@@ -21,151 +21,160 @@ class ProfileScreen extends ConsumerWidget with text_with_button, utils {
   SellerApiHelper helper = SellerApiHelper();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: CP(
-            h: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                sizeH(40),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  width: getScreenWidth(context),
-                  decoration: BoxDecoration(
-                      color: Colors.green[100], borderRadius: radius(10)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      text(
-                        text: pref.company_name,
-                        fontSize: 24,
-                        textAlign: TextAlign.center,
-                        fontWeight: 5,
-                      ),
-                      sizeH25(),
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: ClipRRect(
-                              borderRadius: radius(80),
-                              child: Image.network(
-                                  pref.image_url == ""
-                                      ? "Loading..."
-                                      : pref.image_url,
-                                  height: 80,
-                                  errorBuilder: (context, error, stackTrace) {
-                                return SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                  child: Center(
-                                      child:
-                                          text(text: "No Image", fontSize: 14)),
-                                );
-                              }),
-                            ),
-                          ),
-                          sizeW(15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              text(
-                                text: "${pref.first_name} ${pref.last_name}",
-                                fontSize: 18,
-                                fontWeight: 5,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        onChangeDashboardProvider(ref, true);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: CP(
+              h: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  sizeH(40),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    width: getScreenWidth(context),
+                    decoration: BoxDecoration(
+                        color: Colors.green[100], borderRadius: radius(10)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        text(
+                          text: pref.company_name,
+                          fontSize: 24,
+                          textAlign: TextAlign.center,
+                          fontWeight: 5,
+                        ),
+                        sizeH25(),
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                              width: 80,
+                              child: ClipRRect(
+                                borderRadius: radius(80),
+                                child: Image.network(
+                                    pref.image_url == ""
+                                        ? "Loading..."
+                                        : pref.image_url,
+                                    height: 80,
+                                    errorBuilder: (context, error, stackTrace) {
+                                  return SizedBox(
+                                    height: 80,
+                                    width: 80,
+                                    child: Center(
+                                        child: text(
+                                            text: "No Image", fontSize: 14)),
+                                  );
+                                }),
                               ),
-                              overFlowText(
-                                  h: 20,
-                                  w: getScreenWidth(context) * .5,
-                                  text: pref.email,
-                                  fontSize: 14,
+                            ),
+                            sizeW(15),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                text(
+                                  text: "${pref.first_name} ${pref.last_name}",
+                                  fontSize: 18,
                                   fontWeight: 5,
-                                  overflow: TextOverflow.ellipsis),
-                            ],
-                          )
-                        ],
-                      )
-                    ],
+                                ),
+                                overFlowText(
+                                    h: 20,
+                                    w: getScreenWidth(context) * .5,
+                                    text: pref.email,
+                                    fontSize: 14,
+                                    fontWeight: 5,
+                                    overflow: TextOverflow.ellipsis),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                sizeH(30),
-                text(
-                  text: "Account Settings",
-                  fontSize: 24,
-                  fontWeight: 7,
-                ),
-                sizeH(30),
-                AccounttList(
-                    onTap: () {
-                      Navigation.pushMaterial(EditProfile(
-                        first_name: pref.first_name,
-                        last_name: pref.last_name,
-                        company_address: pref.address,
-                        company_description: pref.description,
-                        phone: pref.phone,
-                      ));
-                    },
-                    icon: Icons.person,
-                    title: "My Profile",
-                    subtitle: "Edit your personal information"),
-                AccounttList(
-                    onTap: () {
-                      toast("Notification featue will be soon");
-                    },
-                    icon: Icons.notifications,
-                    title: "Notification",
-                    subtitle: "Updates and much more"),
-                AccounttList(
-                    onTap: () {
-                      Navigation.pushMaterial(UpdatePasswordScreen());
-                    },
-                    icon: Icons.edit,
-                    title: "Password",
-                    subtitle: "Change your password"),
-                AccounttList(
-                    onTap: () {
-                      final Uri url = Uri.parse(
-                          "https://seamless-linkage-for-enterprises.github.io/terms-and-conditons/");
-                      launchURL(url);
-                    },
-                    icon: Icons.assignment,
-                    title: "Terms and Conditions",
-                    subtitle: "Read our terms and conditions"),
-                AccounttList(
-                    onTap: () {
-                      final Uri url = Uri.parse(
-                          "https://seamless-linkage-enterprise.carrd.co/");
-                      launchURL(url);
-                    },
-                    icon: Icons.info,
-                    title: "About us",
-                    subtitle: "Get information about us & SLE"),
-                AccounttList(
-                    onTap: () {
-                      decisionDialog("Logout",
-                          "Are you sure, You want to logout?", "No", "Yes", () {
-                        Navigation.pop();
-                      }, () {
-                        _logoutDetails();
-                        onChangeDashboardProvider(ref, true);
-                        changeIsLoginOpen(ref, true);
-                        // ref.read(productsProvider.notifier).resetProducts();
-                        ref.read(termsAndConditionProvider.notifier).state =
-                            false;
-                        Navigation.pushMaterialAndRemoveUntil(AuthScreen());
-                      });
-                    },
-                    icon: Icons.logout,
-                    title: "Logout",
-                    subtitle: "Sign out of your accountt"),
-                sizeH(40)
-              ],
+                  sizeH(30),
+                  text(
+                    text: "Account Settings",
+                    fontSize: 24,
+                    fontWeight: 7,
+                  ),
+                  sizeH(30),
+                  AccounttList(
+                      onTap: () {
+                        Navigation.pushMaterial(EditProfile(
+                          first_name: pref.first_name,
+                          last_name: pref.last_name,
+                          company_address: pref.address,
+                          company_description: pref.description,
+                          phone: pref.phone,
+                        ));
+                      },
+                      icon: Icons.person,
+                      title: "My Profile",
+                      subtitle: "Edit your personal information"),
+                  AccounttList(
+                      onTap: () {
+                        toast("Notification featue will be soon");
+                      },
+                      icon: Icons.notifications,
+                      title: "Notification",
+                      subtitle: "Updates and much more"),
+                  AccounttList(
+                      onTap: () {
+                        Navigation.pushMaterial(UpdatePasswordScreen());
+                      },
+                      icon: Icons.edit,
+                      title: "Password",
+                      subtitle: "Change your password"),
+                  AccounttList(
+                      onTap: () {
+                        final Uri url = Uri.parse(
+                            "https://seamless-linkage-for-enterprises.github.io/terms-and-conditons/");
+                        launchURL(url);
+                      },
+                      icon: Icons.assignment,
+                      title: "Terms and Conditions",
+                      subtitle: "Read our terms and conditions"),
+                  AccounttList(
+                      onTap: () {
+                        final Uri url = Uri.parse(
+                            "https://seamless-linkage-enterprise.carrd.co/");
+                        launchURL(url);
+                      },
+                      icon: Icons.info,
+                      title: "About us",
+                      subtitle: "Get information about us & SLE"),
+                  AccounttList(
+                      onTap: () {
+                        decisionDialog(
+                            "Logout",
+                            "Are you sure, You want to logout?",
+                            "No",
+                            "Yes", () {
+                          Navigation.pop();
+                        }, () {
+                          _logoutDetails();
+                          onChangeDashboardProvider(ref, true);
+                          changeIsLoginOpen(ref, true);
+                          // ref.read(productsProvider.notifier).resetProducts();
+                          ref.read(termsAndConditionProvider.notifier).state =
+                              false;
+                          Navigation.pushMaterialAndRemoveUntil(AuthScreen());
+                        });
+                      },
+                      icon: Icons.logout,
+                      title: "Logout",
+                      subtitle: "Sign out of your accountt"),
+                  sizeH(40)
+                ],
+              ),
             ),
           ),
         ),

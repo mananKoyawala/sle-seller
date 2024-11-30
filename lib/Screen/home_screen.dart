@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sle_seller/Package/PackageConstants.dart';
 import 'package:sle_seller/Package/RippleEffect/RippleEffectContainer.dart';
 import 'package:sle_seller/Package/Text_Button.dart';
@@ -16,72 +19,100 @@ class HomeScreen extends ConsumerWidget with text_with_button, utils {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productList = ref.watch(productsProvider);
+    DateTime? _lastBackPressed;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          // If the pop was already handled, exit the handler
+          return;
+        }
 
-    return SafeArea(
-      child: Scaffold(
-        body: CP(
-            h: 16,
-            child: ListView(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    sizeH(50),
-                    text(text: "Your Products", fontSize: 22, fontWeight: 5),
-                    sizeH25(),
-                    productList.isLoading
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return const ProductShimmerContainer();
-                            })
-                        : productList.products.isEmpty
-                            ? SizedBox(
-                                height: 250,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      sizeH(50),
-                                      text(
-                                          text: productList.retryMessage!,
-                                          textAlign: TextAlign.center,
-                                          fontSize: 18),
-                                      sizeH(60),
-                                      simpleButton(
-                                          width: getScreenWidth(context) / 2,
-                                          borderRadius: 30,
-                                          onTap: () async {
-                                            await ref
-                                                .read(productsProvider.notifier)
-                                                .fetchData();
-                                          },
-                                          title: text(
-                                              text: "Retry",
-                                              fontSize: 18,
-                                              textColor: Colors.white,
-                                              fontWeight: 5))
-                                    ],
+        if (_lastBackPressed == null ||
+            DateTime.now().difference(_lastBackPressed!) >
+                const Duration(seconds: 5)) {
+          // Notify user to press back again within the time limit
+          toast("Press back again to exit");
+          _lastBackPressed = DateTime.now();
+        } else {
+          // If back is pressed again within 5 seconds, allow navigation
+          if (Platform.isAndroid) {
+            // Exit app for Android
+            SystemNavigator.pop();
+          } else if (Platform.isIOS) {
+            // Exit app for iOS
+            exit(0);
+          }
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: CP(
+              h: 16,
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      sizeH(50),
+                      text(text: "Your Products", fontSize: 22, fontWeight: 5),
+                      sizeH25(),
+                      productList.isLoading
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 10,
+                              itemBuilder: (context, index) {
+                                return const ProductShimmerContainer();
+                              })
+                          : productList.products.isEmpty
+                              ? SizedBox(
+                                  height: 250,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        sizeH(50),
+                                        text(
+                                            text: productList.retryMessage!,
+                                            textAlign: TextAlign.center,
+                                            fontSize: 18),
+                                        sizeH(60),
+                                        simpleButton(
+                                            width: getScreenWidth(context) / 2,
+                                            borderRadius: 30,
+                                            onTap: () async {
+                                              await ref
+                                                  .read(
+                                                      productsProvider.notifier)
+                                                  .fetchData();
+                                            },
+                                            title: text(
+                                                text: "Retry",
+                                                fontSize: 18,
+                                                textColor: Colors.white,
+                                                fontWeight: 5))
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: productList.products.length,
-                                itemBuilder: (context, index) {
-                                  return ProductContainer(
-                                    ref: ref,
-                                    product: productList.products[index],
-                                  );
-                                }),
-                    sizeH(40),
-                  ],
-                ),
-              ],
-            )),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: productList.products.length,
+                                  itemBuilder: (context, index) {
+                                    return ProductContainer(
+                                      ref: ref,
+                                      product: productList.products[index],
+                                    );
+                                  }),
+                      sizeH(40),
+                    ],
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }
