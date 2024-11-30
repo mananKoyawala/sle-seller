@@ -63,7 +63,7 @@ class ProductNotifier extends AutoDisposeNotifier<ProductState> {
       state = ProductState(
           products: products,
           isLoading: false,
-          retryMessage: 'No products available at the moment.');
+          retryMessage: 'There is no products.');
     } catch (e) {
       state = ProductState(
           products: [],
