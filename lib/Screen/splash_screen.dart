@@ -7,7 +7,7 @@ import 'package:sle_seller/Service/NavigatorKey.dart';
 import 'package:sle_seller/connection/connectivity_helper.dart';
 import 'package:sle_seller/provider/shared_preference.dart';
 import 'package:sle_seller/utils/widget/no_internet.dart';
-
+import 'package:lottie/lottie.dart';
 import 'Auth/auth_screen.dart';
 
 class SplashScreen extends StatelessWidget with text_with_button, utils {
@@ -40,12 +40,29 @@ class SplashScreen extends StatelessWidget with text_with_button, utils {
       _navigateAfterDelay();
     });
     return Scaffold(
-      body: Center(
-          child: text(
-              text: "Splash Screen",
-              fontSize: 55,
-              fontFamily: "great-vibes",
-              textColor: Colors.green)),
-    );
+        body: Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets/animation.json', // Replace with your file path
+              height: 300,
+              width: 300,
+              repeat: true,
+            ),
+            const SizedBox(height: 20),
+            text(
+                text: "Seamless",
+                fontSize: 55,
+                textAlign: TextAlign.center,
+                textColor: Colors.green),
+            text(
+                text: "Linkage for Enterprises",
+                fontSize: 25,
+                textAlign: TextAlign.center,
+                textColor: Colors.green)
+          ]),
+    ));
   }
 }

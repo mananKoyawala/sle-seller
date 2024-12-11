@@ -32,6 +32,7 @@ dev_dependencies:
   firebase_storage: ^12.3.5
   image_picker: ^1.1.2
   connectivity_plus: ^6.1.0
+  lottie: ^3.2.0
 
 flutter:
   uses-material-design: true
@@ -40,6 +41,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - lib/
+    - assets/
 
   fonts:
     - family: poppins
