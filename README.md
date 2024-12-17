@@ -1,6 +1,8 @@
 # SLE Seller Flutter Application
 
-**Seamless Linkage for Enterprise (SLE)** is my final year project, where I worked as the **backend developer** and also contributed to the app development using Flutter. The purpose of this project is to provide a **platform for B2B businesses**, enabling sellers to easily list their products and manage their profiles. This repository contains the code for the **SLE Seller** application, a part of the complete SLE system.
+**Seamless Linkage for Enterprise (SLE)** is my final year project, where I worked as the **backend developer**.
+
+To further showcase my skills, I implemented my own backend using **Flutter** for the seller application, demonstrating the ability to integrate backend functionality within the app. The purpose of this project is to provide a platform for **B2B businesses**, enabling sellers to easily list their products, manage their profiles, and interact seamlessly with buyers.
 
 ---
 
@@ -63,26 +65,36 @@ The **SLE Seller Application** is designed for sellers to register and manage th
 
 ```bash
    .
-   ├── lib
-   │   ├── screens          # Contains all app screens
-   │   ├── models           # Data models for the app
-   │   ├── providers        # State management using Riverpod
-   │   ├── helpers          # Utility functions and APIs
-   │   └── widgets          # Reusable UI components
-   ├── assets               # Static assets like images and icons
-   ├── pubspec.yaml         # Dependencies and app configuration
-   └── README.md            # Project documentation
+├── android               # Android-specific files
+├── ios                   # iOS-specific files
+├── assets                # Static assets like images and icons
+├── lib                   # Main application code
+│   ├── api               # Common HTTP functions (GET, POST, etc.)
+│   ├── connection        # Connectivity-related utilities (e.g., connectivity_plus)
+│   ├── helper            # Middleware between API and function calls
+│   ├── models            # Data models
+│   ├── packages          # Custom reusable components (e.g., text, text fields, buttons)
+│   ├── providers         # State management logic (e.g., Riverpod providers)
+│   ├── screens           # All application screens (e.g., Home, Profile, etc.)
+│   ├── service           # App-level services like NavigatorKey
+│   ├── utils             # Utility functions and reusable widgets
+│   │   ├── widgets       # Folder for reusable widgets (e.g., NoInternet, loaders)
+│   │   └── constants.dart # App-wide constants (e.g., colors, text styles)
+├── output                # Contains the APK file for distribution
+├── pubspec.yaml          # Dependencies and app configuration
+└── README.md             # Project documentation
+
 ```
 
 ## 📱 SLE Buyer Application
 
 - The SLE Buyer Application is the counterpart of this seller app, designed specifically for buyers to browse and purchase products. Check it out here:
-  👉 [SLE Buyer Repository]()
+  👉 [SLE Buyer Repository](https://github.com/mananKoyawala/sle-buyer)
 
 ## 💻 SLE Backend
 
 - The SLE Backend handles the core functionality of the application, such as authentication, product management, and database operations. Explore it here:
-  👉 [SLE Backend Repository]()
+  👉 [SLE Backend Repository](https://github.com/Seamless-Linkage-for-Enterprises/sle-backend)
 
 ## 🛠 Technical Details
 
