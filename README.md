@@ -64,7 +64,7 @@ The **SLE Seller Application** is designed for sellers to register and manage th
 ## 📂 Directory Structure
 
 ```bash
-   .
+.
 ├── android               # Android-specific files
 ├── ios                   # iOS-specific files
 ├── assets                # Static assets like images and icons
