@@ -104,6 +104,20 @@ The SLE Seller Application leverages the following key technologies:
 - HTTP: Used for backend integration to handle API requests and responses.
 - connectivity_plus: Used to check network connectivity and provide a seamless offline/online experience.
 
+## 📸 Screenshots
+
+<img src="output/1.jpg" width="250px">
+<img src="output/2.jpg" width="250px">
+<img src="output/3.jpg" width="250px">
+<img src="output/4.jpg" width="250px">
+<img src="output/5.jpg" width="250px">
+<img src="output/6.jpg" width="250px">
+<img src="output/7.jpg" width="250px">
+<img src="output/8.jpg" width="250px">
+<img src="output/9.jpg" width="250px">
+<img src="output/10.jpg" width="250px">
+<img src="output/11.jpg" width="250px">
+
 ## 📂 APK Download
 
 - To download and test the seller app, you can use the APK file available in the output folder in the root directory:
