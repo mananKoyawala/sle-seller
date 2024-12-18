@@ -33,8 +33,8 @@ The **SLE Seller Application** is designed for sellers to register and manage th
 
 4. **SLE Buyer and Backend**:  
    This app works in conjunction with the **SLE Buyer Application** and the **SLE Backend**.
-   - [SLE Buyer](#sle-buyer)
-   - [SLE Backend](#sle-backend)
+   - [SLE Buyer](https://github.com/mananKoyawala/sle-buyer)
+   - [SLE Backend](https://github.com/Seamless-Linkage-for-Enterprises/sle-backend)
 
 ---
 
